@@ -1,0 +1,10 @@
+{
+  "name": "@zap/logging",
+  "version": "1.0.0",
+  "description": "Shared structured-logging library implementing zap's logging policy (L-1...L-13)",
+  "main": "src/index.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pino": "^9.0.0"
+  }
+}

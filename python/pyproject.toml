@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zap_logging"
+version = "1.0.0"
+description = "Shared structured-logging library implementing zap's logging policy (L-1...L-13)"
+requires-python = ">=3.9"
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["zap_logging*"]
