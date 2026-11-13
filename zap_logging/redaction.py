@@ -1,4 +1,4 @@
-"""Shared redaction key/pattern set - single source of truth (mirrored by node/src/redaction.js)."""
+"""Redaction keys and patterns for structured logging."""
 
 import re
 

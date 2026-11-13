@@ -1,26 +1,55 @@
-# zap-logging
+# zap-logging-py
 
-Canonical logging libraries implementing zap's logging policy (L-1...L-13). One hardened
-implementation per platform; apps adopt the library instead of rolling their own.
+Shared structured-logging library for zap Python services, implementing zap's logging
+policy (L-1...L-13): JSON to stdout, level and redaction handling, an `audit()` helper,
+and additional audit sinks.
 
-- [`python/`](python/) — `zap_logging`, importable Python package.
-- [`node/`](node/) — `@zap/logging`, pino-based Node package.
+The Python package lives at the repository root. Redaction keys and patterns are
+defined in `zap_logging/redaction.py`.
 
-Both share the same behavior contract (JSON-to-stdout envelope, level/redaction handling,
-`audit()` helper, dual-sink adapter) and the same redaction key/pattern set, kept in lockstep
-across `python/zap_logging/redaction.py` and `node/src/redaction.js`.
+See the full policy in the `compliance` repo: `policy/logging-libraries.md`.
 
-See the policy spec in the `compliance` repo: `policy/logging-libraries.md`.
+## Install
+
+Pin clients to a tag or commit containing the root package layout:
+
+```sh
+pip install "zap_logging @ git+https://github.com/Zapata-Group/zap-logging-py.git@<tag-or-commit>"
+```
+
+In `requirements.txt`, replace `<tag-or-commit>` with the chosen release or commit:
+
+```text
+zap_logging @ git+https://github.com/Zapata-Group/zap-logging-py.git@<tag-or-commit>
+```
+
+Older releases that still store the package under `python/` require their original
+subdirectory install URL.
+
+For local development, run from the repository root:
+
+```sh
+pip install -e .
+```
+
+## Usage
+
+```python
+from zap_logging import get_logger, audit, register_audit_sink
+
+log = get_logger(__name__)
+log.info("scan.start", extra={"folder_count": 12})
+
+audit("auth.login", outcome="success", user=email, source_ip=ip, target=user_id)
+```
+
+## Migration shims
+
+```python
+from zap_logging.shims import marqo_indexer_get_logger as get_logger
+from zap_logging.shims import opportunity_crawler_configure_logging as configure_logging
+```
 
 ## Versioning
 
-Tag releases (`v1.0.0`, `v1.1.0`, ...) covering both packages together. Consumers pin to a tag
-via a git dependency:
-
-```
-# Python (requirements.txt)
-zap_logging @ git+https://github.com/<org>/zap-logging.git@v1.0.0#subdirectory=python
-
-# Node (package.json)
-"@zap/logging": "github:<org>/zap-logging#v1.0.0"
-```
+Tag releases (`v1.0.0`, `v1.1.0`, ...) in this repository.
